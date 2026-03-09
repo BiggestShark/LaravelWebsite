@@ -1,13 +1,11 @@
 {{-- 1. 宣告這個頁面要繼承我們剛剛做的 layouts.app 母版 --}}
 @extends('layouts.app')
 
-{{-- 2. 填入母版標題的洞 --}}
-@section('title', 'Biggest\'s website')
-    <div class="top">
-        <h1>
-            Welcome
-        </h1>
-    </div>
+<div class="top">
+    <h1>
+        Welcome
+    </h1>
+</div>
 
 {{-- 3. 把主要內容塞進母版名為 'content' 的洞裡 --}}
 @section('content')

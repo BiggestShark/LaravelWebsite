@@ -17,8 +17,6 @@
         <a href="{{ route('contact') }}">聯絡方式</a>
     </nav>
 
-    <title>@yield('title', 'welcome')</title>
-
     <div class="content">
         @yield('content')
     </div>
