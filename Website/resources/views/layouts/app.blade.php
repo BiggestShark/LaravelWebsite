@@ -11,6 +11,12 @@
 </head>
 <body>
 
+    
+
+    <div class="content">
+        @yield('content')
+    </div>
+
     <nav>
         <a href="{{ route('introduction') }}">自我介紹</a>
         <a href="{{ route('socialMedia') }}">社群平台</a>
@@ -18,10 +24,6 @@
         <a href="{{ route('goals') }}">未來目標</a>
         <a href="{{ route('contact') }}">聯絡方式</a>
     </nav>
-
-    <div class="content">
-        @yield('content')
-    </div>
 
 </body>
 </html>
