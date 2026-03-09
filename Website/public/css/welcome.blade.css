@@ -42,6 +42,14 @@ nav
         font-size: 1.1rem;
         font-weight: bold;
         transition: color 0.3s;
+
+        &.home
+        {
+            margin-right: auto; /* 把右邊的所有元素推開！ */
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
     }
 
     a:hover

@@ -10,6 +10,8 @@
 </head>
 <body>
     <nav>
+        <a href="{{ route('welcome') }}" class="home">首頁</a>
+
         <a href="{{ route('introduction') }}">自我介紹</a>
         <a href="{{ route('socialMedia') }}">社群平台</a>
         <a href="{{ route('gameAchievements') }}">遊戲成就</a>
