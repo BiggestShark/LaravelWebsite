@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Http; // 記得要引入 Http 類別
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/socialMedia', function () {
     return view('socialMedia');
