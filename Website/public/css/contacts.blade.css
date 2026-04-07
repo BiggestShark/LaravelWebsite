@@ -1,0 +1,90 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 聯絡方式容器：改為垂直排列並置中 */
+.contact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin: 30px auto;
+}
+
+/* 單一聯絡卡片基礎設定 */
+.contact-card {
+    /* 新增寬度限制 */
+    width: 100%;
+    max-width: 400px; 
+    
+    /* 以下保留原有樣式 */
+    display: flex;
+    align-items: center;
+    background-color: #1E293B;
+    padding: 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #F8FAFC;
+    border: 2px solid transparent;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    background-color: #334155;
+}
+
+/* 確保 Discord 若為非連結 div 也能有一致的視覺回饋 */
+div.contact-card {
+    cursor: default;
+}
+div.contact-card:hover {
+    transform: none;
+    background-color: #1E293B;
+}
+
+/* 圖示區塊 */
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #0F172A;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+/* 文字資訊區塊 */
+.contact-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+}
+
+.contact-info p {
+    margin: 0;
+    color: #94A3B8;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+/* 懸浮時的品牌專屬邊框顏色 */
+.contact-card.fb:hover {
+    border-color: #1877F2;
+}
+.contact-card.x:hover {
+    border-color: #FFFFFF;
+}
+.contact-card.discord:hover {
+    border-color: #5865F2;
+}
+.contact-card.gmail:hover {
+    border-color: #EA4335;
+}

@@ -1,0 +1,23 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.video
+{
+    display: flex;         /* 使用 Flexbox 排版 */
+    justify-content: center; /* 將內容水平置中 */
+    align-items: center;     /* 將內容垂直置中 (選擇性，如果高度固定) */
+    padding: 20px;         /* 外圍留點白 */
+
+    .styled-iframe
+    {
+        border: 5px solid #2C3E50; /* 設定邊框寬度、樣式(實線)和顏色 */
+        border-radius: 12px;       /* 設定圓角 */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* 加上陰影讓畫面更有立體感 */
+        max-width: 100%;           /* 確保在小螢幕上不會超出畫面 */
+    }
+}
+

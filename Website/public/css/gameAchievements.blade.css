@@ -1,0 +1,238 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+details {
+    margin: 20px 50px;
+    border: 3px solid #334155;
+    border-radius: 8px;
+    background-color: #0F172A;
+    color: #F8FAFC;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+.osu-card {
+    position: relative;        /* 為了讓背景圖和內容能疊在一起 */
+    width: 90%;               /* 寬度撐滿父容器 */
+    max-width: 1600px;          /* 限制最大寬度，避免在大螢幕上太散 */
+    height: 400px;             /* 固定高度，做出精緻的長方形感覺 */
+    background-color: #0F172A; /* 讀取時的預設深色背景 */
+    
+    /* ✨ 你的要求：四個角做圓角 */
+    border-radius: 12px;
+    overflow: hidden;          /* 超出的模糊背景要切掉，圓角才貼合 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); /* 加上陰影更有層次 */
+    
+    margin: 20px 50px;            /* 上下留點距離 */
+    display: flex;
+    align-items: center;       /* 垂直置中 */
+}
+
+/* ✨ 你的要求：模糊處理的背景圖 */
+.osu-cover-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    
+    /* 背景圖設定 */
+    background-size: cover;    /* 圖片要撐滿 */
+    background-position: center;
+    
+    /* 🌟 核心魔法：模糊與亮度調整 */
+    filter: blur(5px) brightness(0.7); /* 模糊 5px，並稍微變暗，突出前方的文字 */
+    transform: scale(1.1);             /* 稍微放大，避免模糊後邊緣出現白邊 */
+    
+    z-index: 1;                        /* 放在最底層 */
+}
+
+/* 前方的內容遮罩 (讓文字更好讀) */
+.osu-content-overlay {
+    position: relative;
+    z-index: 2;                        /* 放在背景圖上面 */
+    width: 100%;
+    height: 100%;
+    padding: 20px;                     /* 內距 */
+    
+    /* 加上一層淡淡的半透明黑色，確保文字清晰 */
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.4) 100%);
+    
+    display: flex;                     /* 使用 Flexbox 排版內容 */
+    align-items: center;               /* 垂直置中 */
+}
+
+/* ✨ 你的要求：左上角、正方形、圓角大頭貼 */
+.osu-avatar {
+    /* 強制綁定尺寸 */
+    width: 350px;                      
+    height: 350px;                     
+    min-width: 350px; /* 雙重保險，確保它不會變形 */
+    min-height: 350px;
+    
+    /* 🌟 Flexbox 防禦魔法：告訴它保持原樣，不要跟著其他元素擠壓或放大 */
+    flex-shrink: 0;                    
+    
+    object-fit: cover; /* 確保頭像就算不是正方形，也會完美裁切填滿 */
+    border-radius: 8px;
+    border: 3px solid rgba(56, 189, 248, 0.5); 
+    margin-right: 20px;
+}
+
+/* 預留給右側玩家資料的樣式 */
+.osu-player-info {
+    color: #F8FAFC;
+    flex: 1;                           /* 撐滿剩餘空間 */
+    display: flex;
+    flex-direction: column;            /* 資料垂直排列 */
+}
+
+/* 右側資訊區塊 */
+.osu-player-info {
+    color: #F8FAFC;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* 名字與國旗在同一行 */
+.osu-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.osu-username {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* 加上陰影讓名字在背景上更立體 */
+}
+
+.osu-flag {
+    width: 30px;
+    margin-left: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* 數據方塊的網格排版 */
+.osu-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 變成兩排 */
+    gap: 10px; /* 方塊之間的距離 */
+}
+
+.osu-stat-box {
+    background-color: rgba(15, 23, 42, 0.6); /* 半透明深色背景 */
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #38BDF8; /* 左側亮藍色點綴 */
+    display: flex;
+    flex-direction: column;
+}
+
+.osu-label {
+    font-size: 0.8rem;
+    color: #94A3B8;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.osu-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* 讓最重要的 PP 值變亮藍色 */
+.osu-value.highlight {
+    color: #38BDF8;
+}
+
+/* Steam 卡片主要容器 */
+.steam-card {
+    background-color: #0F172A;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    color: #F8FAFC;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+/* 頂部基本資訊排版 */
+.steam-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 15px;
+}
+
+.steam-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+
+.steam-info h2 {
+    margin: 0 0 5px 0;
+    font-size: 1.5rem;
+}
+
+.steam-info p {
+    margin: 0;
+    color: #94A3B8;
+    font-size: 0.9rem;
+}
+
+/* 遊戲區塊標題 */
+.steam-section h3 {
+    color: #38BDF8;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+/* 遊戲列表網格 */
+.steam-games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* 單一遊戲卡片 */
+.steam-game-item {
+    background-color: #1E293B;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.steam-game-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.game-details {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-name {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-time {
+    font-size: 0.8rem;
+    color: #94A3B8;
+}
