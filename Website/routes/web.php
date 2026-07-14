@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http; // 記得要引入 Http 類別
 use Illuminate\Support\Facades\Cache; // 引入快取類別
+use Illuminate\Http\Client\Pool;
+use Illuminate\Http\Client\Response;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,44 +35,65 @@ Route::get('/gameAchievements', function () {
         return $response->json('access_token');
     });
 
-    // 2. 取得 osu! 個人資料
-    $osuSTDData = null;
-    $osuTaikoData = null;
-    $osuHighestPP = null;
-    $osuTaikoHighestPP = null;
-    if ($token) {
-        $response = Http::withToken($token)->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}");
-        if ($response->successful()) {
-            $osuSTDData = $response->json();
+    // 2. 取得 osu! 個人資料。快取過期時先回傳舊資料，再於回應後更新。
+    $osuData = Cache::flexible("osu_data_v1_{$osuUserId}", [1800, 86400], function () use ($token, $osuUserId) {
+        $data = [
+            'standard' => null,
+            'taiko' => null,
+            'standard_highest_pp' => null,
+            'taiko_highest_pp' => null,
+        ];
+
+        if (! $token) {
+            return $data;
         }
 
-        $response = Http::withToken($token)->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}/taiko");
-        if ($response->successful()) {
-            $osuTaikoData = $response->json();
-        }
-
-        $response = Http::withToken($token)->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}/scores/best", [
-            'limit' => 1,
-            'mode' => 'osu',
+        $responses = Http::pool(fn (Pool $pool) => [
+            'standard' => $pool->as('standard')->withToken($token)->timeout(10)
+                ->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}"),
+            'taiko' => $pool->as('taiko')->withToken($token)->timeout(10)
+                ->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}/taiko"),
+            'standard_best' => $pool->as('standard_best')->withToken($token)->timeout(10)
+                ->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}/scores/best", [
+                    'limit' => 1,
+                    'mode' => 'osu',
+                ]),
+            'taiko_best' => $pool->as('taiko_best')->withToken($token)->timeout(10)
+                ->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}/scores/best", [
+                    'limit' => 1,
+                    'mode' => 'taiko',
+                ]),
         ]);
-        if ($response->successful()) {
-            $osuHighestPP = $response->json('0.pp');
+
+        if (($responses['standard'] ?? null) instanceof Response && $responses['standard']->successful()) {
+            $data['standard'] = $responses['standard']->json();
         }
 
-        $response = Http::withToken($token)->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}/scores/best", [
-            'limit' => 1,
-            'mode' => 'taiko',
-        ]);
-        if ($response->successful()) {
-            $osuTaikoHighestPP = $response->json('0.pp');
+        if (($responses['taiko'] ?? null) instanceof Response && $responses['taiko']->successful()) {
+            $data['taiko'] = $responses['taiko']->json();
         }
-    }
+
+        if (($responses['standard_best'] ?? null) instanceof Response && $responses['standard_best']->successful()) {
+            $data['standard_highest_pp'] = $responses['standard_best']->json('0.pp');
+        }
+
+        if (($responses['taiko_best'] ?? null) instanceof Response && $responses['taiko_best']->successful()) {
+            $data['taiko_highest_pp'] = $responses['taiko_best']->json('0.pp');
+        }
+
+        return $data;
+    });
+
+    $osuSTDData = $osuData['standard'];
+    $osuTaikoData = $osuData['taiko'];
+    $osuHighestPP = $osuData['standard_highest_pp'];
+    $osuTaikoHighestPP = $osuData['taiko_highest_pp'];
 
     $steamKey = env('STEAM_API_KEY');
     $steamId = env('STEAM_ID');
 
     // 3. 取得 Steam 資料並快取
-    $steamData = Cache::remember("steam_data_{$steamId}", 3600, function () use ($steamKey, $steamId) {
+    $steamData = Cache::flexible("steam_data_v3_{$steamId}", [3600, 86400], function () use ($steamKey, $steamId) {
         
         $summaryRes = Http::get("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/", [
             'key' => $steamKey,
@@ -89,6 +112,49 @@ Route::get('/gameAchievements', function () {
         $ownedGames = $ownedRes->json('response.games') ?? [];
         $top5Games = collect($ownedGames)->sortByDesc('playtime_forever')->take(5)->values()->all();
 
+        $perfectGames = Cache::flexible("steam_perfect_games_v2_{$steamId}", [21600, 604800], function () use ($steamKey, $steamId, $ownedGames) {
+            $achievementGames = collect($ownedGames)
+                ->filter(fn ($game) => ($game['playtime_forever'] ?? 0) > 0 && ($game['has_community_visible_stats'] ?? false))
+                ->values();
+            $perfectGames = collect();
+
+            $responses = Http::pool(function (Pool $pool) use ($achievementGames, $steamKey, $steamId) {
+                foreach ($achievementGames as $game) {
+                    $pool->as((string) $game['appid'])->timeout(10)->get(
+                        'https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/',
+                        [
+                            'key' => $steamKey,
+                            'steamid' => $steamId,
+                            'appid' => $game['appid'],
+                        ]
+                    );
+                }
+            }, concurrency: 20);
+
+            foreach ($achievementGames as $game) {
+                $response = $responses[(string) $game['appid']] ?? null;
+
+                if (! $response instanceof Response || ! $response->successful()) {
+                    continue;
+                }
+
+                $achievements = $response->json('playerstats.achievements') ?? [];
+                $isPerfect = count($achievements) > 0
+                    && collect($achievements)->every(fn ($achievement) => ($achievement['achieved'] ?? 0) === 1);
+
+                if ($isPerfect) {
+                    $perfectGames->push([
+                        'appid' => $game['appid'],
+                        'name' => $game['name'],
+                        'achievement_count' => count($achievements),
+                        'playtime_forever' => $game['playtime_forever'],
+                    ]);
+                }
+            }
+
+            return $perfectGames->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE)->values()->all();
+        });
+
         $recentRes = Http::get("https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/", [
             'key' => $steamKey,
             'steamid' => $steamId,
@@ -102,6 +168,7 @@ Route::get('/gameAchievements', function () {
             'total_games' => $gameCount,
             'top_5_games' => $top5Games,
             'recent_games' => $recentGames,
+            'perfect_games' => $perfectGames,
         ];
     });
 

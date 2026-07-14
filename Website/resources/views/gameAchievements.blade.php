@@ -8,7 +8,7 @@
     </div>
 
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('css/gameAchievements.blade.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('css/gameAchievements.blade.css') }}?v={{ filemtime(public_path('css/gameAchievements.blade.css')) }}">
 @endsection
 
 @section('content')
@@ -35,7 +35,7 @@
                     
                     {{-- 🌟 4. 左上角的圓角正方形大頭貼 (使用 avatar_url) --}}
                     <a href="https://osu.ppy.sh/users/{{ $osuSTDData['id'] }}" target="_blank" rel="noopener noreferrer">
-                        <img src="{{ $osuSTDData['avatar_url'] }}" alt="Avatar" class="osu-avatar">
+                        <img src="{{ $osuSTDData['avatar_url'] }}" alt="Avatar" class="osu-avatar" loading="lazy" decoding="async">
                     </a>
                     
                     {{-- 這裡預留位置，等一下放玩家名稱和數據 --}}
@@ -48,7 +48,9 @@
                                 <img
                                     src="https://flagcdn.com/40x30/{{ strtolower($osuSTDData['country_code']) }}.png"
                                     alt="{{ $osuSTDData['country_code'] }}"
-                                    class="osu-flag">
+                                    class="osu-flag"
+                                    loading="lazy"
+                                    decoding="async">
                             </div>
 
                             {{-- 數據方塊區 (使用 Grid 排版) --}}
@@ -113,7 +115,7 @@
 
                 <div class="osu-content-overlay">
                     <a href="https://osu.ppy.sh/users/{{ $osuTaikoData['id'] }}/taiko" target="_blank" rel="noopener noreferrer">
-                        <img src="{{ $osuTaikoData['avatar_url'] }}" alt="Avatar" class="osu-avatar">
+                        <img src="{{ $osuTaikoData['avatar_url'] }}" alt="Avatar" class="osu-avatar" loading="lazy" decoding="async">
                     </a>
 
                     <div class="osu-player-info">
@@ -123,7 +125,9 @@
                                 <img
                                     src="https://flagcdn.com/40x30/{{ strtolower($osuTaikoData['country_code']) }}.png"
                                     alt="{{ $osuTaikoData['country_code'] }}"
-                                    class="osu-flag">
+                                    class="osu-flag"
+                                    loading="lazy"
+                                    decoding="async">
                             </div>
 
                             <div class="osu-stats-grid">
@@ -195,7 +199,7 @@
         @if(isset($steamData))
         <div class="steam-card">
             <div class="steam-header">
-                <img src="{{ $steamData['profile']['avatarfull'] }}" alt="Steam Avatar" class="steam-avatar">
+                <img src="{{ $steamData['profile']['avatarfull'] }}" alt="Steam Avatar" class="steam-avatar" loading="lazy" decoding="async">
                 <div class="steam-info">
                     <h2>{{ $steamData['profile']['personaname'] }}</h2>
                     <p>狀態: {{ $steamData['profile']['personastate'] == 1 ? '線上' : '離線/其他' }}</p>
@@ -207,13 +211,19 @@
                 <h3>最近遊玩</h3>
                 <div class="steam-games-grid">
                     @foreach($steamData['recent_games'] as $game)
-                    <div class="steam-game-item">
-                        <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{{ $game['appid'] }}/capsule_231x87.jpg" alt="{{ $game['name'] }}">
-                        <div class="game-details">
-                            <span class="game-name">{{ $game['name'] }}</span>
-                            <span class="game-time">過去兩週: {{ round($game['playtime_2weeks'] / 60, 1) }} 小時</span>
+                    <a
+                        href="https://store.steampowered.com/app/{{ $game['appid'] }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="steam-game-link">
+                        <div class="steam-game-item">
+                            <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{{ $game['appid'] }}/capsule_231x87.jpg" alt="{{ $game['name'] }}" loading="lazy" decoding="async">
+                            <div class="game-details">
+                                <span class="game-name">{{ $game['name'] }}</span>
+                                <span class="game-time">過去兩週: {{ round($game['playtime_2weeks'] / 60, 1) }} 小時</span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                     @endforeach
                 </div>
             </div>
@@ -222,15 +232,46 @@
                 <h3>最高時數前五名</h3>
                 <div class="steam-games-grid">
                     @foreach($steamData['top_5_games'] as $game)
-                    <div class="steam-game-item">
-                        <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{{ $game['appid'] }}/capsule_231x87.jpg" alt="{{ $game['name'] }}">
-                        <div class="game-details">
-                            <span class="game-name">{{ $game['name'] }}</span>
-                            <span class="game-time">總時數: {{ round($game['playtime_forever'] / 60, 1) }} 小時</span>
+                    <a
+                        href="https://store.steampowered.com/app/{{ $game['appid'] }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="steam-game-link">
+                        <div class="steam-game-item">
+                            <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{{ $game['appid'] }}/capsule_231x87.jpg" alt="{{ $game['name'] }}" loading="lazy" decoding="async">
+                            <div class="game-details">
+                                <span class="game-name">{{ $game['name'] }}</span>
+                                <span class="game-time">總時數: {{ round($game['playtime_forever'] / 60, 1) }} 小時</span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                     @endforeach
                 </div>
+            </div>
+
+            <div class="steam-section">
+                <h3>全成就遊戲（{{ count($steamData['perfect_games'] ?? []) }}）</h3>
+                @if(!empty($steamData['perfect_games']))
+                    <div class="steam-games-grid">
+                        @foreach($steamData['perfect_games'] as $game)
+                        <a
+                            href="https://store.steampowered.com/app/{{ $game['appid'] }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="steam-game-link">
+                            <div class="steam-game-item steam-perfect-game">
+                                <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/{{ $game['appid'] }}/capsule_231x87.jpg" alt="{{ $game['name'] }}" loading="lazy" decoding="async">
+                                <div class="game-details">
+                                    <span class="game-name">{{ $game['name'] }}</span>
+                                    <span class="game-time">已完成 {{ $game['achievement_count'] }} 個成就</span>
+                                </div>
+                            </div>
+                        </a>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="steam-empty-message">目前沒有可顯示的全成就遊戲。</p>
+                @endif
             </div>
         </div>
         @endif

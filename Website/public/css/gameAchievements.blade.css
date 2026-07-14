@@ -26,6 +26,7 @@ details > summary
 {
     padding: 14px 20px;
     cursor: pointer;
+    user-select: none;
 }
 
 details[open] > summary
@@ -245,6 +246,31 @@ details[open] > summary
     overflow: hidden;
     display: flex;
     flex-direction: column;
+}
+
+.steam-game-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.steam-game-link .steam-game-item {
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.steam-game-link:hover .steam-game-item,
+.steam-game-link:focus-visible .steam-game-item {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(56, 189, 248, 0.2);
+}
+
+.steam-perfect-game {
+    border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.steam-empty-message {
+    color: #94A3B8;
+    margin-bottom: 20px;
 }
 
 .steam-game-item img {
