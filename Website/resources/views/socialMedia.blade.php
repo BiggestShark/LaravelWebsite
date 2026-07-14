@@ -12,29 +12,35 @@
 @endsection
 
 @section('content')
-    <div id="latest-video">
-        <h2>Youtube最新影片</h2>
-        
-        {{-- 檢查有沒有成功抓到影片資料 --}}
-        @if($latestVideo)
-            <div class="video">
-                {{-- 把抓到的標題印出來 --}}
-                <h3>
-                    {{ $latestVideo['title'] }}
-                </h3>
-                
-                {{-- 將影片 ID 塞進 iframe 的網址裡 --}}
-                <iframe 
-                    class="styled-iframe" 
-                    width="853" 
-                    height="480" 
-                    src="https://www.youtube.com/embed/{{ $latestVideo['id'] }}" 
-                    title="{{ $latestVideo['title'] }}" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        @else
-            <p>沒有最新影片</p>
-        @endif
+    <div class="page-sections">
+        <section id="latest-video" class="page-section">
+            <h2>
+                Youtube最新影片
+            </h2>
+
+            {{-- 檢查有沒有成功抓到影片資料 --}}
+            @if($latestVideo)
+                <div class="video">
+                    {{-- 把抓到的標題印出來 --}}
+                    <h3>
+                        {{ $latestVideo['title'] }}
+                    </h3>
+
+                    {{-- 將影片 ID 塞進 iframe 的網址裡 --}}
+                    <iframe
+                        class="styled-iframe"
+                        width="853"
+                        height="480"
+                        src="https://www.youtube.com/embed/{{ $latestVideo['id'] }}"
+                        title="{{ $latestVideo['title'] }}"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            @else
+                <p>
+                    沒有最新影片
+                </p>
+            @endif
+        </section>
     </div>
 @endsection

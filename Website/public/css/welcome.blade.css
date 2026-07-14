@@ -121,3 +121,56 @@ nav
     backdrop-filter: blur(8px); /* 毛玻璃模糊效果，使背景圖不干擾文字閱讀 */
     color: #F8FAFC;
 }
+
+.page-sections
+{
+    display: grid;
+    gap: 24px;
+}
+
+.page-section
+{
+    padding: 28px;
+    background-color: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-left: 4px solid #38BDF8;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.page-section > h2
+{
+    display: block;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.35);
+    color: #F8FAFC;
+    font-size: 1.5rem;
+}
+
+.page-section > p
+{
+    max-width: 65ch;
+    margin-bottom: 10px;
+    color: #CBD5E1;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.page-section > p:last-child
+{
+    margin-bottom: 0;
+}
+
+@media (max-width: 640px)
+{
+    .page-sections
+    {
+        gap: 16px;
+    }
+
+    .page-section
+    {
+        padding: 20px;
+    }
+}

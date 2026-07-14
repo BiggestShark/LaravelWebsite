@@ -36,8 +36,8 @@ Route::get('/gameAchievements', function () {
     // 2. 取得 osu! 個人資料
     $osuSTDData = null;
     $osuTaikoData = null;
-    $osuSTDRecentTop5Scores = null;
-    $osuTaikoRecentTop5Scores = null;
+    $osuHighestPP = null;
+    $osuTaikoHighestPP = null;
     if ($token) {
         $response = Http::withToken($token)->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}");
         if ($response->successful()) {
@@ -50,28 +50,21 @@ Route::get('/gameAchievements', function () {
         }
 
         $response = Http::withToken($token)->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}/scores/best", [
-            'limit' => 100,
-            'mode' => 'std',
+            'limit' => 1,
+            'mode' => 'osu',
         ]);
+        if ($response->successful()) {
+            $osuHighestPP = $response->json('0.pp');
+        }
 
-        $osuSTDtop100Scores = $response->collect();
-
-        $osuSTDRecentTop5Scores = $osuSTDtop100Scores->sortByDesc('create_at')
-                                                     ->values()
-                                                     ->take(5);
-
-        $response = Http::withToken($token)->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}/taiko/scores/best", [
-            'limit' => 100,
+        $response = Http::withToken($token)->get("https://osu.ppy.sh/api/v2/users/{$osuUserId}/scores/best", [
+            'limit' => 1,
             'mode' => 'taiko',
         ]);
-
-        $osuTaikotop100Scores = $response->collect();
-
-        $osuTaikoRecentTop5Scores = $osuTaikotop100Scores->sortByDesc('create_at')
-                                                          ->values()
-                                                          ->take(5);
-        
-    }  
+        if ($response->successful()) {
+            $osuTaikoHighestPP = $response->json('0.pp');
+        }
+    }
 
     $steamKey = env('STEAM_API_KEY');
     $steamId = env('STEAM_ID');
@@ -116,8 +109,8 @@ Route::get('/gameAchievements', function () {
     return view('gameAchievements', [
         'osuSTDData' => $osuSTDData,
         'osuTaikoData' => $osuTaikoData,
-        'osuSTDRecentTop5Scores' => $osuSTDRecentTop5Scores,
-        '$osuTaikoRecentTop5Scores' => $osuTaikoRecentTop5Scores,
+        'osuHighestPP' => $osuHighestPP,
+        'osuTaikoHighestPP' => $osuTaikoHighestPP,
         'steamData' => $steamData,
     ]);
 

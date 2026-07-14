@@ -19,6 +19,10 @@
             </h2>
         </summary>
         @if($osuSTDData)
+            <h3 class="osu-mode-title">
+                osu!standard
+            </h3>
+
             {{-- 🌟 1. 整個資料卡片的容器 (長方形、圓角) --}}
             <div class="osu-card">
                 
@@ -40,8 +44,11 @@
                             {{-- 玩家 ID 與國旗 --}}
                             <div class="osu-header">
                                 <h2 class="osu-username">{{ $osuSTDData['username'] }}</h2>
-                                {{-- osu! 官方的國旗小圖示 --}}
-                                <img src="https://osu.ppy.sh/assets/images/flags/{{ $osuSTDData['country_code'] }}.png" alt="{{ $osuSTDData['country_code'] }}" class="osu-flag">
+                                {{-- 玩家所屬國家的國旗小圖示 --}}
+                                <img
+                                    src="https://flagcdn.com/40x30/{{ strtolower($osuSTDData['country_code']) }}.png"
+                                    alt="{{ $osuSTDData['country_code'] }}"
+                                    class="osu-flag">
                             </div>
 
                             {{-- 數據方塊區 (使用 Grid 排版) --}}
@@ -65,6 +72,25 @@
                                     <span class="osu-label">Total Play Counts</span>
                                     <span class="osu-value">{{ number_format($osuSTDData['statistics']['play_count'] ?? 0) }}</span>
                                 </div>
+
+                                <div class="osu-stat-box">
+                                    <span class="osu-label">Play Time</span>
+                                    <span class="osu-value">{{ number_format(floor(($osuSTDData['statistics']['play_time'] ?? 0) / 3600)) }} 小時</span>
+                                </div>
+
+                                <div class="osu-stat-box">
+                                    <span class="osu-label">Best Performance</span>
+                                    <span class="osu-value highlight">
+                                        {{ $osuHighestPP !== null ? number_format($osuHighestPP, 2) . ' PP' : '暫無資料' }}
+                                    </span>
+                                </div>
+
+                                <div class="osu-stat-box wide">
+                                    <span class="osu-label">Account Created</span>
+                                    <span class="osu-value">
+                                        {{ !empty($osuSTDData['join_date']) ? \Illuminate\Support\Carbon::parse($osuSTDData['join_date'])->format('Y/m/d') : '暫無資料' }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -72,7 +98,82 @@
                 </div>
             </div>
         @else
-            <p>正在努力載入 osu! 伺服器資料中...</p>
+            <p>
+                正在努力載入 osu!standard 伺服器資料中...
+            </p>
+        @endif
+
+        @if($osuTaikoData)
+            <h3 class="osu-mode-title">
+                osu!taiko
+            </h3>
+
+            <div class="osu-card">
+                <div class="osu-cover-bg" style="background-image: url('{{ $osuTaikoData['cover_url'] }}');"></div>
+
+                <div class="osu-content-overlay">
+                    <a href="https://osu.ppy.sh/users/{{ $osuTaikoData['id'] }}/taiko" target="_blank" rel="noopener noreferrer">
+                        <img src="{{ $osuTaikoData['avatar_url'] }}" alt="Avatar" class="osu-avatar">
+                    </a>
+
+                    <div class="osu-player-info">
+                        <div class="osu-player-info">
+                            <div class="osu-header">
+                                <h2 class="osu-username">{{ $osuTaikoData['username'] }}</h2>
+                                <img
+                                    src="https://flagcdn.com/40x30/{{ strtolower($osuTaikoData['country_code']) }}.png"
+                                    alt="{{ $osuTaikoData['country_code'] }}"
+                                    class="osu-flag">
+                            </div>
+
+                            <div class="osu-stats-grid">
+                                <div class="osu-stat-box">
+                                    <span class="osu-label">Global Rank</span>
+                                    <span class="osu-value">#{{ number_format($osuTaikoData['statistics']['global_rank'] ?? 0) }}</span>
+                                </div>
+
+                                <div class="osu-stat-box">
+                                    <span class="osu-label">Performance Points (PP)</span>
+                                    <span class="osu-value highlight">{{ number_format($osuTaikoData['statistics']['pp'] ?? 0) }}</span>
+                                </div>
+
+                                <div class="osu-stat-box">
+                                    <span class="osu-label">Accuracy</span>
+                                    <span class="osu-value">{{ round($osuTaikoData['statistics']['hit_accuracy'] ?? 0, 2) }}%</span>
+                                </div>
+
+                                <div class="osu-stat-box">
+                                    <span class="osu-label">Total Play Counts</span>
+                                    <span class="osu-value">{{ number_format($osuTaikoData['statistics']['play_count'] ?? 0) }}</span>
+                                </div>
+
+                                <div class="osu-stat-box">
+                                    <span class="osu-label">Play Time</span>
+                                    <span class="osu-value">{{ number_format(floor(($osuTaikoData['statistics']['play_time'] ?? 0) / 3600)) }} 小時</span>
+                                </div>
+
+                                <div class="osu-stat-box">
+                                    <span class="osu-label">Best Performance</span>
+                                    <span class="osu-value highlight">
+                                        {{ $osuTaikoHighestPP !== null ? number_format($osuTaikoHighestPP, 2) . ' PP' : '暫無資料' }}
+                                    </span>
+                                </div>
+
+                                <div class="osu-stat-box wide">
+                                    <span class="osu-label">Account Created</span>
+                                    <span class="osu-value">
+                                        {{ !empty($osuTaikoData['join_date']) ? \Illuminate\Support\Carbon::parse($osuTaikoData['join_date'])->format('Y/m/d') : '暫無資料' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <p>
+                正在努力載入 osu!taiko 伺服器資料中...
+            </p>
         @endif
         <p>
             2019年開始玩，2020上半年轉板子
