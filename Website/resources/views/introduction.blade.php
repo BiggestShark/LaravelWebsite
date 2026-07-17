@@ -51,6 +51,18 @@
                 下面連結可以看我有什麼書
             </p>
             <a
+                href="https://anilist.co/user/BiggestShark/animelist"
+                class="sheet-card"
+                target="_blank"
+                rel="noopener noreferrer">
+                <div class="sheet-icon">
+                    📺
+                </div>
+                <div class="sheet-info">
+                    <span class="sheet-title">動畫清單</span>
+                </div>
+            </a>
+            <a
                 href="https://docs.google.com/spreadsheets/d/1M0vkh6yoU0GnUAtRIjRUhoDCVlRwu_ctgd4bbNQo26Q/edit?gid=0#gid=0"
                 class="sheet-card"
                 target="_blank"
@@ -60,7 +72,6 @@
                 </div>
                 <div class="sheet-info">
                     <span class="sheet-title">Biggest Shark的圖書館</span>
-                    <span class="sheet-desc">包含同人誌</span>
                 </div>
             </a>
         </section>
