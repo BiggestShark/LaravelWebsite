@@ -51,6 +51,15 @@
                                     class="osu-flag"
                                     loading="lazy"
                                     decoding="async">
+                                @if(!empty($osuSTDData['team']['flag_url']))
+                                    <img
+                                        src="{{ $osuSTDData['team']['flag_url'] }}"
+                                        alt="{{ $osuSTDData['team']['name'] ?? 'osu! team' }}"
+                                        title="{{ $osuSTDData['team']['short_name'] ?? $osuSTDData['team']['name'] ?? '' }}"
+                                        class="osu-flag"
+                                        loading="lazy"
+                                        decoding="async">
+                                @endif
                             </div>
 
                             {{-- 數據方塊區 (使用 Grid 排版) --}}
@@ -128,6 +137,15 @@
                                     class="osu-flag"
                                     loading="lazy"
                                     decoding="async">
+                                @if(!empty($osuTaikoData['team']['flag_url']))
+                                    <img
+                                        src="{{ $osuTaikoData['team']['flag_url'] }}"
+                                        alt="{{ $osuTaikoData['team']['name'] ?? 'osu! team' }}"
+                                        title="{{ $osuTaikoData['team']['short_name'] ?? $osuTaikoData['team']['name'] ?? '' }}"
+                                        class="osu-flag"
+                                        loading="lazy"
+                                        decoding="async">
+                                @endif
                             </div>
 
                             <div class="osu-stats-grid">

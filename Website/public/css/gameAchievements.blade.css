@@ -144,6 +144,8 @@ details[open] > summary
 
 .osu-flag {
     width: 30px;
+    height: 22.5px;
+    object-fit: contain;
     margin-left: 10px;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.5);
