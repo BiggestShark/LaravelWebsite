@@ -1,11 +1,13 @@
 @extends('layouts.app')
 
 @section('title', 'Biggest\'s website')
-    <div class="top">
+@section('hero')
+    <header class="top">
         <h1>
             未來目標
         </h1>
-    </div>
+    </header>
+@endsection
 
 @section('content')
 @endsection

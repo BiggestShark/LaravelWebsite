@@ -2,7 +2,20 @@
 {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html,
+body
+{
+    overflow-x: hidden;
+}
+
+img,
+iframe
+{
+    max-width: 100%;
 }
 
 body, html
@@ -13,16 +26,17 @@ body, html
     background-color: #1E293B;
     color: #F8FAFC;
 
-    p
-    {
-        line-height: 1.8;
-        margin-bottom: 16px;
-    }
+}
+
+p
+{
+    line-height: 1.8;
+    margin-bottom: 16px;
 }
 
 .top
 {
-    height: 30vh;
+    min-height: clamp(150px, 30vh, 300px);
     background-color: #0F172A;
     display: flex;
     align-items: center;
@@ -30,13 +44,14 @@ body, html
     text-align: center;
     font-size: 2.5rem;
 
-    h1
-    {
-        color: #E2E8F0;
-        font-size: 3rem;
-        margin: 0;
-        letter-spacing: 2px;
-    }
+}
+
+.top h1
+{
+    color: #E2E8F0;
+    font-size: clamp(2rem, 7vw, 3rem);
+    margin: 0;
+    letter-spacing: 2px;
 }
 
 nav
@@ -45,32 +60,47 @@ nav
     top: 0;           /* 當滾動到距離頂部 0px 時開始黏住 */
     background-color: #020617;
     padding: 15px 0;
-    text-align: center;
     z-index: 1000;    /* 確保導覽列不會被下面的內容蓋住 */
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 
-    a
-    {
-        color: white;
-        text-decoration: none;
-        margin: 0 20px;
-        font-size: 1.1rem;
-        font-weight: bold;
-        transition: color 0.3s;
+}
 
-        &.home
-        {
-            margin-right: auto; /* 把右邊的所有元素推開！ */
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-decoration: none;
-        }
-    }
+nav a
+{
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: color 0.3s;
+}
 
-    a:hover
-    {
-        color: #38BDF8;
-    }
+nav a.home
+{
+    font-size: 1.5rem;
+}
+
+nav a:hover
+{
+    color: #38BDF8;
+}
+
+.nav-inner
+{
+    width: min(100% - 32px, 1200px);
+    min-height: 32px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+.nav-links
+{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 40px;
 }
 
 .content
@@ -82,17 +112,18 @@ nav
     min-height: calc( 100vh - 368px);
     font-size: 1.5rem;
 
-    h2
-    {
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 10px;
-        display: inline-block;
-    }
+}
 
-    p
-    {
-        color: #CBD5E1;
-    };
+.content h2
+{
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.content p
+{
+    color: #CBD5E1;
 }
 
 /* 背景大圖層設定 */
@@ -120,6 +151,7 @@ nav
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); /* 懸浮陰影效果 */
     backdrop-filter: blur(8px); /* 毛玻璃模糊效果，使背景圖不干擾文字閱讀 */
     color: #F8FAFC;
+    overflow-wrap: anywhere;
 }
 
 .page-sections
@@ -164,6 +196,30 @@ nav
 
 @media (max-width: 640px)
 {
+    .top
+    {
+        min-height: 140px;
+        padding: 24px 16px;
+    }
+
+    .content
+    {
+        font-size: 1rem;
+    }
+
+    .background-wrapper
+    {
+        min-height: calc(100vh - 205px);
+        padding: 20px 12px;
+        background-attachment: scroll;
+    }
+
+    .floating-card
+    {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
     .page-sections
     {
         gap: 16px;
@@ -171,6 +227,52 @@ nav
 
     .page-section
     {
-        padding: 20px;
+        padding: 18px 16px;
+    }
+
+    .page-section > h2
+    {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 768px)
+{
+    nav
+    {
+        padding: 12px 0;
+    }
+
+    .nav-inner
+    {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 24px;
+    }
+
+    .nav-links
+    {
+        display: contents;
+    }
+
+    .nav-inner > .home,
+    .nav-links a
+    {
+        min-height: 44px;
+        padding: 10px 0;
+        display: inline-flex;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+    *,
+    *::before,
+    *::after
+    {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
     }
 }

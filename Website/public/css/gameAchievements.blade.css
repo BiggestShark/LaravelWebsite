@@ -2,6 +2,7 @@
 {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -48,7 +49,7 @@ details[open] > summary
 
 .osu-card {
     position: relative;        /* 為了讓背景圖和內容能疊在一起 */
-    width: 90%;               /* 寬度撐滿父容器 */
+    width: auto;
     max-width: 1600px;          /* 限制最大寬度，避免在大螢幕上太散 */
     height: 400px;             /* 固定高度，做出精緻的長方形感覺 */
     background-color: #0F172A; /* 讀取時的預設深色背景 */
@@ -236,7 +237,7 @@ details[open] > summary
 /* 遊戲列表網格 */
 .steam-games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
     gap: 15px;
     margin-bottom: 20px;
 }
@@ -299,4 +300,104 @@ details[open] > summary
 .game-time {
     font-size: 0.8rem;
     color: #94A3B8;
+}
+
+@media (max-width: 900px)
+{
+    details + details
+    {
+        margin-top: 16px;
+    }
+
+    details > summary
+    {
+        padding: 12px 14px;
+    }
+
+    .osu-mode-title
+    {
+        margin: 16px 14px 0;
+        font-size: 1.2rem;
+    }
+
+    .osu-card
+    {
+        height: auto;
+        margin: 14px;
+        align-items: stretch;
+    }
+
+    .osu-content-overlay
+    {
+        height: auto;
+        min-height: 0;
+        padding: 16px;
+        flex-direction: column;
+        align-items: stretch;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.92));
+    }
+
+    .osu-content-overlay > a
+    {
+        align-self: center;
+    }
+
+    .osu-avatar
+    {
+        width: clamp(120px, 45vw, 180px);
+        height: clamp(120px, 45vw, 180px);
+        min-width: 0;
+        min-height: 0;
+        margin: 0 0 16px;
+    }
+
+    .osu-header
+    {
+        justify-content: center;
+        flex-wrap: wrap;
+        row-gap: 8px;
+        text-align: center;
+    }
+
+    .osu-username
+    {
+        max-width: 100%;
+        font-size: 1.4rem;
+        overflow-wrap: anywhere;
+    }
+
+    .osu-stats-grid
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .osu-stat-box.wide
+    {
+        grid-column: auto;
+    }
+
+    .steam-card
+    {
+        padding: 16px;
+        margin: 14px 0;
+    }
+
+    .steam-header
+    {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 420px)
+{
+    .steam-header
+    {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .steam-avatar
+    {
+        margin-right: 0;
+    }
 }

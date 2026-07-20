@@ -1,14 +1,16 @@
 @extends('layouts.app')
 
 @section('title', 'Biggest\'s website')
-    <div class="top">
+@section('hero')
+    <header class="top">
         <h1>
             聯絡方式
         </h1>
-    </div>
+    </header>
+@endsection
 
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('css/contacts.blade.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('css/contacts.blade.css') }}?v={{ filemtime(public_path('css/contacts.blade.css')) }}">
 @endsection
 
 @section('content')

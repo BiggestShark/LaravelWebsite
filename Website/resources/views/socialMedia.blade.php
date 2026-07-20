@@ -1,14 +1,16 @@
 @extends('layouts.app')
 
 @section('title', 'Biggest\'s website')
-    <div class="top">
+@section('hero')
+    <header class="top">
         <h1>
             社群平台
         </h1>
-    </div>
+    </header>
+@endsection
 
 @section('custom_css')
-    <link rel="stylesheet" href="{{ asset('css/socialMedia.blade.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/socialMedia.blade.css') }}?v={{ filemtime(public_path('css/socialMedia.blade.css')) }}">
 @endsection
 
 @section('content')
@@ -33,6 +35,7 @@
                         height="480"
                         src="https://www.youtube.com/embed/{{ $latestVideo['id'] }}"
                         title="{{ $latestVideo['title'] }}"
+                        loading="lazy"
                         allowfullscreen>
                     </iframe>
                 </div>

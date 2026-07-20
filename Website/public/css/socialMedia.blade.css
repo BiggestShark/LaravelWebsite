@@ -2,6 +2,7 @@
 {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -11,17 +12,19 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    width: 100%;
     padding-top: 20px;
+}
 
-    .styled-iframe
-    {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 16 / 9;
-        border: 5px solid #2C3E50;
-        border-radius: 12px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    }
+.styled-iframe
+{
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: 5px solid #2C3E50;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .video h3
@@ -29,4 +32,25 @@
     color: #E2E8F0;
     font-size: 1.2rem;
     text-align: center;
+}
+
+@media (max-width: 640px)
+{
+    .video
+    {
+        gap: 14px;
+        padding-top: 12px;
+    }
+
+    .video h3
+    {
+        font-size: 1rem;
+        overflow-wrap: anywhere;
+    }
+
+    .styled-iframe
+    {
+        border-width: 3px;
+        border-radius: 8px;
+    }
 }

@@ -1,11 +1,13 @@
 @extends('layouts.app')
 
 @section('title', 'Biggest\'s website')
-    <div class="top">
+@section('hero')
+    <header class="top">
         <h1>
             遊戲成就
         </h1>
-    </div>
+    </header>
+@endsection
 
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('css/gameAchievements.blade.css') }}?v={{ filemtime(public_path('css/gameAchievements.blade.css')) }}">
