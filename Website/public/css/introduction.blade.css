@@ -53,3 +53,41 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     border-left-color: #34D399;
 }
+
+.hardware-list
+{
+    display: grid;
+    gap: 12px;
+}
+
+.hardware-item
+{
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    padding: 14px 16px;
+    background-color: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.hardware-item dt
+{
+    color: #38BDF8;
+    font-weight: bold;
+}
+
+.hardware-item dd
+{
+    color: #CBD5E1;
+    line-height: 1.5;
+}
+
+@media (max-width: 640px)
+{
+    .hardware-item
+    {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+}
